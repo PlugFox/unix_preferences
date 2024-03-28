@@ -14,7 +14,10 @@ import 'package:unix_preferences/src/protobuf/api.pb.dart' as api;
 /// {@endtemplate}
 class UnixPreferencesClient with MapMixin<String, Object> {
   /// {@macro unix_preferences_client}
-  UnixPreferencesClient({String? clientId}) {
+  UnixPreferencesClient({
+    String? clientId,
+    void Function(Map<String, Object>)? onUpdate,
+  }) : _onStorageUpdate = onUpdate {
     this.clientId =
         clientId ?? hashCode.toUnsigned(20).toRadixString(16).padLeft(5, '0');
   }
@@ -28,6 +31,9 @@ class UnixPreferencesClient with MapMixin<String, Object> {
   /// List of message listeners
   final List<({String? topic, OnUnixMessage callback})> _onMessages =
       <({String? topic, OnUnixMessage callback})>[];
+
+  /// Callback for storage updates
+  final void Function(Map<String, Object>)? _onStorageUpdate;
 
   /// Add a message listener
   void addListener(OnUnixMessage listener, {String? topic}) {
@@ -126,6 +132,8 @@ class UnixPreferencesClient with MapMixin<String, Object> {
             for (final entry in storage.entries)
               if (entry.value case Object value) entry.key: value,
           });
+        if (_onStorageUpdate != null)
+          _onStorageUpdate?.call(Map<String, Object>.unmodifiable(_storage));
       } else if (reply.hasPush()) {
         final push = reply.push;
         final topic = push.hasTopic() ? push.topic : null;
