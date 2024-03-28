@@ -5,7 +5,7 @@ import 'dart:async';
 import 'package:unix_preferences/src/client/client.dart';
 import 'package:unix_preferences/src/server/server.dart';
 
-void main() => runZonedGuarded(() async {
+void main() => runZonedGuarded<void>(() async {
       // Run a server
       final server = await runServer(serverId: 'Server');
 
