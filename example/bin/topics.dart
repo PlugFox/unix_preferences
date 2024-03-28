@@ -1,19 +1,22 @@
 // ignore_for_file: avoid_print
 
 import 'dart:async';
+import 'dart:io' as io;
 
-import 'package:unix_preferences/src/client/client.dart';
-import 'package:unix_preferences/src/server/server.dart';
+import 'package:unix_preferences/unix_preferences.dart';
 
-void main() => runZonedGuarded<void>(() async {
+/// Example how to send messages between a server and clients
+void main() => Future<void>(() async {
       // Run a server
       final server = await runServer(serverId: 'Server');
 
       // Run clients
       final clients = await Future.wait<UnixPreferencesClient>([
-        for (var i = 0; i < 3; i++) runClient(clientId: 'Client$i'),
+        for (var i = 1; i < 4; i++) runClient(clientId: 'Client$i'),
       ]);
       final [c1, c2, c3] = clients;
+
+      print('Server: ${server.serverId}');
 
       // Listen to all clients broadcast messages
       for (final client in clients) {
@@ -24,23 +27,24 @@ void main() => runZonedGuarded<void>(() async {
 
       // Listen chat messages only for Client#1
       c1.addListener(
-        (p) => print('${c1.clientId}#Chat: $p'),
+        (p) => print('${c1.clientId}#Chat: ${p.message}'),
         topic: 'chat',
       );
 
       // Push from Client#3 to all clients without topic
       c3.push('Hello, World!');
 
+      await Future<void>.delayed(Duration.zero); // Need to wait for the server
+
       // Push from Client#2 to all clients with topic "chat"
       c2.push('Hello, Chat!', topic: 'chat');
 
+      await Future<void>.delayed(const Duration(seconds: 1));
+
       // Close all clients and server
-      for (final client in clients) {
-        await client.close();
-      }
+      for (final client in clients) await client.close();
       await server.close();
-    }, (error, stackTrace) {
-      print('Global error: $error\n$stackTrace');
+      io.exit(0);
     });
 
 /// Run a server

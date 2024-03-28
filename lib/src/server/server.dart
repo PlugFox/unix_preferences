@@ -6,8 +6,8 @@ import 'dart:typed_data';
 import 'package:fixnum/fixnum.dart' as fn;
 import 'package:unix_preferences/src/config/config.dart';
 import 'package:unix_preferences/src/model/push.dart';
+import 'package:unix_preferences/src/model/storage_codec.dart';
 import 'package:unix_preferences/src/protobuf/api.pb.dart' as api;
-import 'package:unix_preferences/src/utility/decode_map_entry.dart';
 
 /// {@template unix_preferences_server}
 /// Server for Unix Preferences
@@ -112,14 +112,15 @@ class UnixPreferencesServer with MapMixin<String, Object> {
   }
 
   /// Bind the server socket
-  Future<void> bind({String? path}) => _handle(() async {
+  Future<void> bind({String? path, int backlog = 0, bool shared = false}) =>
+      _handle(() async {
         if (isRunning) throw StateError('Server is already running');
-        final address = io.InternetAddress(
-          path ?? Config().unixPreferencesPath,
-          type: io.InternetAddressType.unix,
-        );
-        final connection =
-            _serverSocket = await io.ServerSocket.bind(address, 0);
+        final address = path ?? Config().unixPreferencesPath;
+        final file = io.File(address);
+        if (file.existsSync()) await file.delete();
+        final connection = _serverSocket = await io.ServerSocket.bind(
+            io.InternetAddress(address, type: io.InternetAddressType.unix), 0,
+            backlog: backlog, shared: shared);
 
         void onConnection(io.Socket socket) {
           _connections.add(socket);

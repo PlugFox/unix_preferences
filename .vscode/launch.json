@@ -2,21 +2,34 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Example (lcl)",
+            "name": "Storage (Example)",
             "request": "launch",
             "type": "dart",
             "flutterMode": "debug",
             "cwd": "${workspaceFolder}/example",
-            "program": "bin/main.dart",
+            "program": "bin/storage.dart",
             "env": {
                 "ENVIRONMENT": "local"
             },
             "console": "debugConsole",
             "runTestsOnDevice": false,
             "toolArgs": [],
-            "args": [
-                "--dart-define-from-file=config/local.json"
-            ]
+            "args": []
+        },
+        {
+            "name": "Topics (Example)",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "debug",
+            "cwd": "${workspaceFolder}/example",
+            "program": "bin/topics.dart",
+            "env": {
+                "ENVIRONMENT": "local"
+            },
+            "console": "debugConsole",
+            "runTestsOnDevice": false,
+            "toolArgs": [],
+            "args": []
         }
     ]
 }

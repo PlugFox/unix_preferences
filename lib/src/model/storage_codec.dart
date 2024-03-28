@@ -53,13 +53,6 @@ final class StorageEncoder
     final entry = api.MapEntryValue();
     if (value is String) {
       entry.textValue = value;
-    } else if (value is List) {
-      entry.listValue.addAll(value.map(_$encodeMapEntryValue));
-    } else if (value is Map) {
-      entry.mapValue.addAll(const StorageEncoder().convert({
-        for (final entry in value.entries)
-          if (entry.key case String key) key: entry.value
-      }));
     } else if (value is bool) {
       entry.boolValue = value;
     } else if (value is int) {
@@ -70,6 +63,18 @@ final class StorageEncoder
       entry.floatValue = value.toDouble();
     } else if (value is api.MapEntryValue) {
       return value;
+    } else if (value is List) {
+      final list = value.map(_$encodeMapEntryValue).toList(growable: false);
+      entry.listLength = list.length;
+      entry.listValue.addAll(list);
+    } else if (value is Map) {
+      final map = [
+        for (final entry in value.entries)
+          if (entry.key case String key)
+            api.MapEntry(key: key, value: _$encodeMapEntryValue(entry.value)),
+      ];
+      entry.mapLength = map.length;
+      entry.mapValue.addAll(map);
     }
     return entry;
   }

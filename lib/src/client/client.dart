@@ -6,8 +6,8 @@ import 'dart:typed_data';
 import 'package:fixnum/fixnum.dart' as fn;
 import 'package:unix_preferences/src/config/config.dart';
 import 'package:unix_preferences/src/model/push.dart';
+import 'package:unix_preferences/src/model/storage_codec.dart';
 import 'package:unix_preferences/src/protobuf/api.pb.dart' as api;
-import 'package:unix_preferences/src/utility/decode_map_entry.dart';
 
 /// {@template unix_preferences_client}
 /// Client for Unix Preferences
@@ -182,11 +182,11 @@ class UnixPreferencesClient with MapMixin<String, Object> {
 
   /// Close the client socket
   Future<void> close() => _handle(() async {
-        _subscription?.cancel().ignore();
         _id = fn.Int64.ZERO;
         _onMessages.clear();
         _storage.clear();
         _changes.clear();
+        _subscription?.cancel().ignore();
         await _clientSocket?.close();
         _clientSocket = null;
       });
