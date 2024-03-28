@@ -9,7 +9,7 @@ import 'package:unix_preferences/unix_preferences.dart';
 void main() => Future<void>(() async {
       final client = UnixPreferencesClient();
       await client.connect();
-      client.addListener((p) => print('< ${p.message}'));
+      client.addListener((p) => print('< ${p.message}'), topic: 'chat');
       print('Client: ${client.clientId} is running, press [Ctrl+C] to stop');
       io.ProcessSignal.sigint.watch().listen((_) {
         client.close().ignore();
@@ -18,6 +18,6 @@ void main() => Future<void>(() async {
       });
       io.stdin.transform(utf8.decoder).listen((line) {
         print('> $line');
-        client.push(line);
+        client.push(line, topic: 'chat');
       });
     });
