@@ -1,0 +1,128 @@
+syntax = "proto3";
+
+package unix.preferences.protocol;
+
+// Command sent from a client to a server.
+// ProtocolVersion2 uses id and one of the possible request messages.
+message Command {
+    // Id of command to let client match replies to commands.
+    uint64 id = 1;
+
+    // Client ID.
+    string client = 2;
+
+    reserved 3 to 100;
+
+    // Request to ping server.
+    Ping ping = 101;
+
+    // Request to update storage.
+    Update update = 102;
+
+    // Push data to other clients.
+    Push push = 103;
+
+    // Subscribe to a topic.
+    Subscribe subscribe = 105;
+
+    // Unsubscribe from a topic.
+    Unsubscribe unsubscribe = 106;
+}
+
+// Reply sent from a server to a client.
+// ProtocolVersion2 uses id and one of the possible concrete result messages.
+message Reply {
+    // Id of command to let client match replies to commands.
+    uint64 id = 1;
+
+    // Server ID.
+    string server = 2;
+
+    reserved 3 to 100;
+
+    // Reply to ping request.
+    Pong pong = 101;
+
+    // Current storage state.
+    Storage storage = 102;
+
+    // Push data from other clients.
+    Push push = 103;
+}
+
+// Ping the server.
+message Ping {}
+
+// Reply to a ping request.
+message Pong {}
+
+// Push data to other clients.
+message Push {
+    reserved 1 to 100;
+
+    string topic = 101;
+
+    oneof data {
+        string text_data = 102;
+        bytes binary_data = 103;
+    }
+}
+
+// Update storage data.
+message Update {
+    // Storage data to update.
+    repeated MapEntry upsert = 1;
+}
+
+// Subscribe to a topic.
+message Subscribe {
+    // Topic to subscribe to.
+    string topic = 1;
+}
+
+// Unsubscribe from a topic.
+message Unsubscribe {
+    // Topic to unsubscribe from.
+    string topic = 1;
+}
+
+// Current storage data at the server.
+message Storage {
+    // Storage data entries at the server.
+    repeated MapEntry entries = 1;
+}
+
+// Storage entry.
+message MapEntry {
+    // Storage key.
+    string key = 1;
+
+    // Storage value.
+    MapEntryValue value = 2;
+}
+
+// Storage value.
+message MapEntryValue {
+    // Storage list length (if null, list is not present)
+    int32 list_length = 2;
+
+    // Storage list value
+    repeated MapEntryValue list_value = 3;
+
+    // Storage map length (if null, map is not present)
+    int32 map_length = 4;
+
+    // Storage map value
+    repeated MapEntry map_value = 5;
+
+    // Any supported value type.
+    oneof value {
+        string text_value = 6;
+        bytes binary_value = 7;
+        bool bool_value = 8;
+        int32 int32_value = 9;
+        int64 int64_value = 10;
+        double double_value = 11;
+        float float_value = 12;
+    }
+}

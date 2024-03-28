@@ -1,0 +1,61 @@
+name: unix_preferences
+
+description: >
+  Shared preferences between multiple Dart instances.
+  This package provides a simple way to share preferences between multiple Dart instances.
+  It uses a Unix domain socket (IPC) to communicate between the instances.
+
+publish_to: 'none'
+
+version: 0.0.1+1
+
+homepage: https://github.com/PlugFox/unix_preferences
+
+repository: https://github.com/PlugFox/unix_preferences
+
+issue_tracker: https://github.com/PlugFox/unix_preferences/issues
+
+funding:
+  - https://www.buymeacoffee.com/
+  - https://www.patreon.com/
+  - https://boosty.to/
+
+topics:
+  - IPC
+  - unix
+  - socket
+  - preferences
+  - shared_preferences
+
+platforms:
+  windows:
+  linux:
+  macos:
+#  android:
+#  ios:
+#  web:
+
+#screenshots:
+#  - description: 'Screenshot 1'
+#    path: screenshot_1.png
+
+environment:
+  sdk: '>=3.3.2 <4.0.0'
+
+dependencies:
+  # Annotations
+  meta: ^1.9.1
+
+  # Protocol Buffers
+  protobuf: ^3.1.0
+
+  # Utilities
+  path: ^1.9.0
+  crypto: ^3.0.3
+  fixnum: ^1.1.0
+  stack_trace: ^1.11.1
+
+dev_dependencies:
+  build_runner: ^2.4.6
+  lints: ^3.0.0
+  test: ^1.24.4
