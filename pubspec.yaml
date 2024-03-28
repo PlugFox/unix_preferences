@@ -40,7 +40,7 @@ platforms:
 #    path: screenshot_1.png
 
 environment:
-  sdk: '>=3.3.2 <4.0.0'
+  sdk: '>=3.0.0 <4.0.0'
 
 dependencies:
   # Annotations

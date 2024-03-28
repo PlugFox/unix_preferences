@@ -13,6 +13,8 @@ analyzer:
     - ".test_coverage.dart"
     # Assets
     - "assets/**"
+    # Protobuf
+    - "lib/src/protobuf/*"
 
   # Enable the following options to enable strong mode.
   language:
