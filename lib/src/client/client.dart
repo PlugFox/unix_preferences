@@ -56,13 +56,14 @@ class UnixPreferencesClient with MapMixin<String, Object> {
   }
 
   /// Notify all listeners
-  void _notifyListeners(String? topic, Object message) {
+  void _notifyListeners(
+    String? topic,
+    Object /*String|Uint8List|Map<String, Object?>*/ message,
+  ) {
     if (_onMessages.isEmpty) return;
     final push = Push(
       topic: topic,
       message: message,
-      isText: message is String,
-      isBinary: message is List<int>,
       isBroadcast: topic == null,
       hasTopic: topic != null,
     );
@@ -142,6 +143,8 @@ class UnixPreferencesClient with MapMixin<String, Object> {
           message = push.textData;
         } else if (push.hasBinaryData()) {
           message = push.binaryData;
+        } else if (push.hasMapData()) {
+          message = const StorageCodec().decoder.convert(push.mapData.entries);
         } else {
           throw ArgumentError.value(push, 'push', 'Invalid push message');
         }
@@ -169,8 +172,12 @@ class UnixPreferencesClient with MapMixin<String, Object> {
 
   /// Asynchronously send a message to all connected clients.
   /// [topic] is the topic of the message, if null, message will be broadcasted.
-  /// [message] is the message to be sent, can be either String or Uint8List.
-  void push(Object /*String|Uint8List*/ message, {String? topic}) {
+  /// [message] is the message to be sent,
+  ///   can be either String or Uint8List or Map<String, Object?>.
+  void push(
+    Object /*String|Uint8List|Map<String,Object?>*/ message, {
+    String? topic,
+  }) {
     if (!isRunning) throw StateError('Client is not connected');
     final command = api.Command(
       id: _nextId(),
@@ -181,6 +188,10 @@ class UnixPreferencesClient with MapMixin<String, Object> {
       command.push.textData = message;
     } else if (message is List<int>) {
       command.push.binaryData = message;
+    } else if (message is Map<String, Object?>) {
+      command.push.mapData = api.Storage(
+        entries: const StorageCodec().encoder.convert(message),
+      );
     } else {
       throw ArgumentError.value(message, 'message', 'Invalid message');
     }

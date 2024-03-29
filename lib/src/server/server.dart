@@ -50,8 +50,6 @@ class UnixPreferencesServer with MapMixin<String, Object> {
     final push = Push(
       topic: topic,
       message: message,
-      isText: message is String,
-      isBinary: message is List<int>,
       isBroadcast: topic == null,
       hasTopic: topic != null,
     );
@@ -200,13 +198,16 @@ class UnixPreferencesServer with MapMixin<String, Object> {
           push: api.Push(
               topic: command.push.hasTopic() ? command.push.topic : null),
         );
+        final push = command.push;
         Object message;
-        if (command.push.hasBinaryData()) {
-          reply.push.binaryData = message = command.push.binaryData;
-        } else if (command.push.hasTextData()) {
-          reply.push.textData = message = command.push.textData;
+        if (push.hasBinaryData()) {
+          push.binaryData = message = command.push.binaryData;
+        } else if (push.hasTextData()) {
+          push.textData = message = command.push.textData;
+        } else if (push.hasMapData()) {
+          message = const StorageCodec().decoder.convert(push.mapData.entries);
         } else {
-          throw ArgumentError.value(command, 'command', 'Invalid command');
+          throw ArgumentError.value(push, 'push', 'Invalid push message');
         }
         final data = reply.writeToBuffer();
         for (final receiver in receivers) {
@@ -231,7 +232,8 @@ class UnixPreferencesServer with MapMixin<String, Object> {
 
   /// Asynchronously send a message to all connected clients.
   /// [topic] is the topic of the message, if null, message will be broadcasted.
-  /// [message] is the message to be sent, can be either String or Uint8List.
+  /// [message] is the message to be sent,
+  ///   can be either String or Uint8List or Map<String, Object?>.
   void push(Object /*String|Uint8List*/ message, {String? topic}) {
     if (!isRunning) throw StateError('Server is not running');
     final receivers = topic != null
@@ -247,6 +249,10 @@ class UnixPreferencesServer with MapMixin<String, Object> {
       reply.push.textData = message;
     } else if (message is List<int>) {
       reply.push.binaryData = message;
+    } else if (message is Map<String, Object?>) {
+      reply.push.mapData = api.Storage(
+        entries: const StorageCodec().encoder.convert(message),
+      );
     } else {
       throw ArgumentError.value(message, 'message', 'Invalid message');
     }

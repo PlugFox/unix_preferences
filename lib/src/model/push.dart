@@ -7,8 +7,6 @@ class Push {
   Push({
     required this.topic,
     required this.message,
-    required this.isText,
-    required this.isBinary,
     required this.isBroadcast,
     required this.hasTopic,
   });
@@ -16,18 +14,13 @@ class Push {
   /// The topic of the message, if null, message will be broadcasted.
   final String? topic;
 
-  /// The message to be sent, can be either String or Uint8List.
-  final Object /*String|Uint8List*/ message;
-
-  /// Whether the message is a text message.
-  final bool isText;
-
-  /// Whether the message is a binary message.
-  final bool isBinary;
+  /// The message to be sent,
+  /// can be either String or Uint8List or Map<String, Object?>.
+  final Object /*String|Uint8List|Map<String, Object?>*/ message;
 
   /// Whether the message is broadcasted.
   final bool isBroadcast;
 
-  ///
+  /// Whether the message has a topic.
   final bool hasTopic;
 }

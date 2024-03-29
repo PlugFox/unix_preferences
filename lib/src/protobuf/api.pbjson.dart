@@ -141,6 +141,15 @@ const Push$json = {
     {'1': 'topic', '3': 101, '4': 1, '5': 9, '10': 'topic'},
     {'1': 'text_data', '3': 102, '4': 1, '5': 9, '9': 0, '10': 'textData'},
     {'1': 'binary_data', '3': 103, '4': 1, '5': 12, '9': 0, '10': 'binaryData'},
+    {
+      '1': 'map_data',
+      '3': 104,
+      '4': 1,
+      '5': 11,
+      '6': '.unix.preferences.protocol.Storage',
+      '9': 0,
+      '10': 'mapData'
+    },
   ],
   '8': [
     {'1': 'data'},
@@ -153,7 +162,9 @@ const Push$json = {
 /// Descriptor for `Push`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List pushDescriptor = $convert.base64Decode(
     'CgRQdXNoEhQKBXRvcGljGGUgASgJUgV0b3BpYxIdCgl0ZXh0X2RhdGEYZiABKAlIAFIIdGV4dE'
-    'RhdGESIQoLYmluYXJ5X2RhdGEYZyABKAxIAFIKYmluYXJ5RGF0YUIGCgRkYXRhSgQIARBl');
+    'RhdGESIQoLYmluYXJ5X2RhdGEYZyABKAxIAFIKYmluYXJ5RGF0YRI/CghtYXBfZGF0YRhoIAEo'
+    'CzIiLnVuaXgucHJlZmVyZW5jZXMucHJvdG9jb2wuU3RvcmFnZUgAUgdtYXBEYXRhQgYKBGRhdG'
+    'FKBAgBEGU=');
 
 @$core.Deprecated('Use updateDescriptor instead')
 const Update$json = {

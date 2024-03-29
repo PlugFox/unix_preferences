@@ -422,7 +422,7 @@ class Pong extends $pb.GeneratedMessage {
   static Pong? _defaultInstance;
 }
 
-enum Push_Data { textData, binaryData, notSet }
+enum Push_Data { textData, binaryData, mapData, notSet }
 
 /// Push data to other clients.
 class Push extends $pb.GeneratedMessage {
@@ -430,6 +430,7 @@ class Push extends $pb.GeneratedMessage {
     $core.String? topic,
     $core.String? textData,
     $core.List<$core.int>? binaryData,
+    Storage? mapData,
   }) {
     final $result = create();
     if (topic != null) {
@@ -440,6 +441,9 @@ class Push extends $pb.GeneratedMessage {
     }
     if (binaryData != null) {
       $result.binaryData = binaryData;
+    }
+    if (mapData != null) {
+      $result.mapData = mapData;
     }
     return $result;
   }
@@ -454,6 +458,7 @@ class Push extends $pb.GeneratedMessage {
   static const $core.Map<$core.int, Push_Data> _Push_DataByTag = {
     102: Push_Data.textData,
     103: Push_Data.binaryData,
+    104: Push_Data.mapData,
     0: Push_Data.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
@@ -461,11 +466,13 @@ class Push extends $pb.GeneratedMessage {
       package: const $pb.PackageName(
           _omitMessageNames ? '' : 'unix.preferences.protocol'),
       createEmptyInstance: create)
-    ..oo(0, [102, 103])
+    ..oo(0, [102, 103, 104])
     ..aOS(101, _omitFieldNames ? '' : 'topic')
     ..aOS(102, _omitFieldNames ? '' : 'textData')
     ..a<$core.List<$core.int>>(
         103, _omitFieldNames ? '' : 'binaryData', $pb.PbFieldType.OY)
+    ..aOM<Storage>(104, _omitFieldNames ? '' : 'mapData',
+        subBuilder: Storage.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('Using this can add significant overhead to your binary. '
@@ -527,6 +534,20 @@ class Push extends $pb.GeneratedMessage {
   $core.bool hasBinaryData() => $_has(2);
   @$pb.TagNumber(103)
   void clearBinaryData() => clearField(103);
+
+  @$pb.TagNumber(104)
+  Storage get mapData => $_getN(3);
+  @$pb.TagNumber(104)
+  set mapData(Storage v) {
+    setField(104, v);
+  }
+
+  @$pb.TagNumber(104)
+  $core.bool hasMapData() => $_has(3);
+  @$pb.TagNumber(104)
+  void clearMapData() => clearField(104);
+  @$pb.TagNumber(104)
+  Storage ensureMapData() => $_ensure(3);
 }
 
 /// Update storage data.
