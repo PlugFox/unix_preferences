@@ -19,7 +19,7 @@ void main() => Future<void>(() async {
       // Listen to all clients broadcast messages
       for (final client in clients) {
         client.addListener(
-          (p) => print('${client.clientId}#Global: ${p.message}'),
+          (p) => print('${client.clientId}#Global> ${p.message}'),
         );
       }
 
@@ -28,19 +28,19 @@ void main() => Future<void>(() async {
 
       // Listen chat messages only for Client#1
       c1.addListener(
-        (p) => print('${c1.clientId}#Chat: ${p.message}'),
+        (p) => print('${c1.clientId}#Chat> ${p.message}'),
         topic: 'chat',
       );
 
       await sleep(); // Need to wait for the server
 
       // Push from Client#3 to all clients without topic
-      c3.push('Hello, World!');
+      c3.push('Hello, everyone! From ${c3.clientId}');
 
       await sleep(); // Need to wait for the server
 
       // Push from Client#2 to all clients with topic "chat"
-      c2.push('Hello, Chat!', topic: 'chat');
+      c2.push('Hello, Chat! From ${c2.clientId}', topic: 'chat');
 
       await sleep(); // Need to wait for the server
 
