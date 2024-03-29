@@ -234,7 +234,10 @@ class UnixPreferencesServer with MapMixin<String, Object> {
   /// [topic] is the topic of the message, if null, message will be broadcasted.
   /// [message] is the message to be sent,
   ///   can be either String or Uint8List or Map<String, Object?>.
-  void push(Object /*String|Uint8List*/ message, {String? topic}) {
+  void push(
+    Object /* String | Uint8List | Map<String, Object?> */ message, {
+    String? topic,
+  }) {
     if (!isRunning) throw StateError('Server is not running');
     final receivers = topic != null
         ? _topics[topic]?.toList(growable: false)

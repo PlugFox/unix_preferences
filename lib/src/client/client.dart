@@ -175,7 +175,7 @@ class UnixPreferencesClient with MapMixin<String, Object> {
   /// [message] is the message to be sent,
   ///   can be either String or Uint8List or Map<String, Object?>.
   void push(
-    Object /*String|Uint8List|Map<String,Object?>*/ message, {
+    Object /* String | Uint8List | Map<String, Object?> */ message, {
     String? topic,
   }) {
     if (!isRunning) throw StateError('Client is not connected');

@@ -16,7 +16,7 @@ class Push {
 
   /// The message to be sent,
   /// can be either String or Uint8List or Map<String, Object?>.
-  final Object /*String|Uint8List|Map<String, Object?>*/ message;
+  final Object /* String | Uint8List | Map<String, Object?> */ message;
 
   /// Whether the message is broadcasted.
   final bool isBroadcast;
