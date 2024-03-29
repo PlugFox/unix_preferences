@@ -201,11 +201,11 @@ class UnixPreferencesServer with MapMixin<String, Object> {
         final push = command.push;
         Object message;
         if (push.hasBinaryData()) {
-          push.binaryData = message = command.push.binaryData;
+          reply.push.binaryData = message = push.binaryData;
         } else if (push.hasTextData()) {
-          push.textData = message = command.push.textData;
+          reply.push.textData = message = push.textData;
         } else if (push.hasMapData()) {
-          message = const StorageCodec().decoder.convert(push.mapData.entries);
+          reply.push.mapData = message = push.mapData;
         } else {
           throw ArgumentError.value(push, 'push', 'Invalid push message');
         }

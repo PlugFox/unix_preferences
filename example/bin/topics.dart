@@ -16,8 +16,6 @@ void main() => Future<void>(() async {
       ]);
       final [c1, c2, c3] = clients;
 
-      print('Server: ${server.serverId}');
-
       // Listen to all clients broadcast messages
       for (final client in clients) {
         client.addListener(
@@ -25,21 +23,26 @@ void main() => Future<void>(() async {
         );
       }
 
+      Future<void> sleep([int ms = 50]) =>
+          Future<void>.delayed(Duration(milliseconds: ms));
+
       // Listen chat messages only for Client#1
       c1.addListener(
         (p) => print('${c1.clientId}#Chat: ${p.message}'),
         topic: 'chat',
       );
 
+      await sleep(); // Need to wait for the server
+
       // Push from Client#3 to all clients without topic
       c3.push('Hello, World!');
 
-      await Future<void>.delayed(Duration.zero); // Need to wait for the server
+      await sleep(); // Need to wait for the server
 
       // Push from Client#2 to all clients with topic "chat"
       c2.push('Hello, Chat!', topic: 'chat');
 
-      await Future<void>.delayed(const Duration(seconds: 1));
+      await sleep(); // Need to wait for the server
 
       // Close all clients and server
       for (final client in clients) await client.close();

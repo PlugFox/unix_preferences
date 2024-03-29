@@ -16,14 +16,18 @@ void main() => Future<void>(() async {
       ]);
       final [c1, c2, c3] = clients;
 
+      Future<void> sleep([int ms = 50]) =>
+          Future<void>.delayed(Duration(milliseconds: ms));
+
       c1['name'] = 'Alice';
       c2['age'] = 12.34;
       c2['friends'] = {'Bob': 34, 'Charlie': 56};
       c3['isAlive'] = true;
       server['items'] = [1, 2, 3, 4, 5];
 
-      await Future<void>.delayed(const Duration(seconds: 1));
+      await sleep(); // Need to wait for the server
 
+      print('${server.serverId}  data: $server');
       print('${c1.clientId} data: $c1');
       print('${c2.clientId} data: $c2');
       print('${c3.clientId} data: $c3');

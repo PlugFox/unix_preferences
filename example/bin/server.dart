@@ -6,6 +6,7 @@ import 'dart:io' as io;
 import 'package:unix_preferences/unix_preferences.dart';
 
 /// Start a Unix Preferences server
+/// Should be run before the [client.dart] is running.
 void main() => Future<void>(() async {
       final server = UnixPreferencesServer();
       await server.bind();
